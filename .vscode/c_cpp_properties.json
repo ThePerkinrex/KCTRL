@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/perc/arduino-app/arduino-1.8.12-linux64/arduino-1.8.12/tools/**",
+                "/home/perc/arduino-app/arduino-1.8.12-linux64/arduino-1.8.12/hardware/arduino/avr/**",
+                "/home/perc/arduino-app/arduino-1.8.12-linux64/arduino-1.8.12/hardware/arduino/avr/cores/arduino/**",
+                "/home/perc/arduino-app/arduino-1.8.12-linux64/arduino-1.8.12/hardware/arduino/avr/cores/arduino",
+                "/home/perc/arduino-app/arduino-1.8.12-linux64/arduino-1.8.12/libraries/**"
+            ],
+            "forcedInclude": [
+                "/home/perc/arduino-app/arduino-1.8.12-linux64/arduino-1.8.12/hardware/arduino/avr/cores/arduino/Arduino.h"
+            ],
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/home/perc/arduino-app/arduino-1.8.12-linux64/arduino-1.8.12/hardware/tools/avr/bin/avr-gcc",
+            "cStandard": "c11",
+            "cppStandard": "gnu++14"
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,6 @@
+(
+    values: [
+        ("LCDWRITE", {"l1": "string","l2": "string"}),
+        ("LED_1", {"state": "bool"}),
+    ]
+)
