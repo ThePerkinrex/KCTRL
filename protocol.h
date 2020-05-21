@@ -1,4 +1,4 @@
-// LCDWRITE {"l1": "string", "l2": "string"}
+// LCDWRITE {"l2": "string", "l1": "string"}
 #define LCDWRITE_VAL_ID 0
 typedef struct {
 	String l1;
@@ -83,8 +83,8 @@ last_index ++;
 }
 last_index ++;
 LcdwriteVal ret;
-ret.l1 = l1;
-ret.l2 = l2;onLcdwriteVal(ret);tokens="";
+ret.l2 = l2;
+ret.l1 = l1;onLcdwriteVal(ret);tokens="";
 }
 break;}
 

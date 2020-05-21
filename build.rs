@@ -8,6 +8,8 @@ use std::fmt::Write as FmtWrite;
 use std::io::Write;
 use std::{collections::HashMap, fs::File};
 
+use itertools::Itertools;
+
 const LOAD_KRPC: bool = true;
 const LOAD_PROTOCOL: bool = true;
 
@@ -30,6 +32,7 @@ fn incr(l: Length) -> Length {
 }
 
 fn main() {
+	println!("cargo:rerun-if-changed=build.rs");
 	if LOAD_KRPC {
 		for path in glob::glob("krpc/*.json").unwrap().filter_map(Result::ok) {
 			println!("cargo:rerun-if-changed={}", path.display());
@@ -113,7 +116,8 @@ fn load_protocol() {
 		let mut length = Length::Known(1);
 
 		write!(enum_elements, "\t{}(", classname);
-		for (key, t) in args.clone() {
+		for key in args.keys().sorted() {
+			let t = args[key].clone();
 			// writeln!(header, "// {} {}", key, t)?;
 			let c = match t.as_ref() {
 				"string" => "String".to_string(),
@@ -155,7 +159,8 @@ fn load_protocol() {
 		writeln!(complex_parser_check_done, "let mut byte_count = 1;");
 		writeln!(header_complex_check, "int byte_count = 1;");
 		let mut bool_names = Vec::new();
-		for (name, t) in args.clone() {
+		for name in args.keys().sorted() {
+			let t = args[name].clone();
 			if t == "bool" {
 				bool_names.push(name);
 			} else if t == "string" {

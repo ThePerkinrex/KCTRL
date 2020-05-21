@@ -33,6 +33,7 @@ fn main() {
     }
     let (mut reader, mut writer) = t.split();
     std::thread::sleep(std::time::Duration::from_secs(4));
+    println!("LCD");
     writer.write_all(&protocol::Value::Lcdwrite("Hello,".to_string(), "world!".to_string()).repr()).expect("Error writing to string");
     std::thread::sleep(std::time::Duration::from_secs(4));
     println!("ON");

@@ -8,7 +8,7 @@ impl Value {
     pub fn repr(&self) -> Vec<u8> {
         let mut res = Vec::new();
         match self {
-            Self::Lcdwrite(l1,l2) => {
+            Self::Lcdwrite(l2,l1) => {
 res.push(LCDWRITE_VAL_ID as u8);
 res.append(&mut l1.bytes().collect::<Vec<u8>>().clone());
 res.push(255);
@@ -83,7 +83,7 @@ l2.push(self.tokens[last_index] as char);
 last_index += 1;
 }
 last_index += 1;
-return Some(Value::Lcdwrite(l1,l2));
+return Some(Value::Lcdwrite(l2,l1));
 }},
 LED_1_VAL_ID => {
 let mut done = false;
