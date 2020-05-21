@@ -105,7 +105,7 @@ fn load_protocol() {
 			"{}({})",
 			classname,
 			args.clone()
-				.iter()
+				.iter().sorted()
 				.map(|(name, _t)| name.clone())
 				.collect::<Vec<String>>()
 				.join(",")
@@ -146,7 +146,7 @@ fn load_protocol() {
 			"String repr_{}Val({}Val v) {{",
 			classname, classname
 		);
-		writeln!(header, "\tString s = \"\" + char({});", i);
+		writeln!(header, "\tString s = \"\"; s += char({}_VAL_ID);", val.to_uppercase());
 		writeln!(repr_match_contents, "Self::{} => {{", rs_match_key);
 		writeln!(parser_token_end, "{}_VAL_ID => {{", val.to_uppercase());
 		writeln!(inner_parser_token_end, "let mut last_index = 1;");

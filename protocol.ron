@@ -1,6 +1,9 @@
 (
     values: [
         ("LCDWRITE", {"l1": "string","l2": "string"}),
+        ("LCDCLEAR", {"k": "bool"}),
         ("LED_1", {"state": "bool"}),
+        ("HANDSHAKE", {"side": "bool"}),
+        ("RECIEVED", {"side": "bool"})
     ]
 )

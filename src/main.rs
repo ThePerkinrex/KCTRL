@@ -16,14 +16,16 @@ fn main() {
     // println!("{:?}",v);
     // loop {}
 
+    let mut parser = protocol::ProtoParser::new();
 
     let mut t = serial::SerialPort::new();
-    let mut buffer: [u8; 3] = [0; 3];
+    let mut buffer: [u8; 1] = [0; 1];
     loop {
         match t.read(&mut buffer) {
-            Ok(bytes) => {
-                if bytes == 1 {
-                    t.write(&['C' as u8]).expect("Error sending data");
+            Ok(byte) => {
+                if let Some(protocol::Value::Handshake(_)) = parser.parse(buffer[0]) {
+                    println!("HANDSHAKE");
+                    t.write_all(&protocol::Value::Recieved(true).repr());
                     break;
                 }
             }
@@ -32,7 +34,8 @@ fn main() {
         }
     }
     let (mut reader, mut writer) = t.split();
-    std::thread::sleep(std::time::Duration::from_secs(4));
+    println!("LCD clear");
+    writer.write_all(&protocol::Value::Lcdclear(false).repr()).expect("Error writing to string");
     println!("LCD");
     writer.write_all(&protocol::Value::Lcdwrite("Hello,".to_string(), "world!".to_string()).repr()).expect("Error writing to string");
     std::thread::sleep(std::time::Duration::from_secs(4));

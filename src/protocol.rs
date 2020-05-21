@@ -1,23 +1,38 @@
 #[derive(Clone, Debug)]
 pub enum Value {
     	Lcdwrite(String,String,),
+	Lcdclear(bool,),
 	Led_1(bool,),
+	Handshake(bool,),
+	Recieved(bool,),
 
 }
 impl Value {
     pub fn repr(&self) -> Vec<u8> {
         let mut res = Vec::new();
         match self {
-            Self::Lcdwrite(l2,l1) => {
+            Self::Lcdwrite(l1,l2) => {
 res.push(LCDWRITE_VAL_ID as u8);
 res.append(&mut l1.bytes().collect::<Vec<u8>>().clone());
 res.push(255);
 res.append(&mut l2.bytes().collect::<Vec<u8>>().clone());
 res.push(255);
 },
+Self::Lcdclear(k) => {
+res.push(LCDCLEAR_VAL_ID as u8);
+res.push(0|((*k as u8)<<(0 as u8)));
+},
 Self::Led_1(state) => {
 res.push(LED_1_VAL_ID as u8);
 res.push(0|((*state as u8)<<(0 as u8)));
+},
+Self::Handshake(side) => {
+res.push(HANDSHAKE_VAL_ID as u8);
+res.push(0|((*side as u8)<<(0 as u8)));
+},
+Self::Recieved(side) => {
+res.push(RECIEVED_VAL_ID as u8);
+res.push(0|((*side as u8)<<(0 as u8)));
 },
 
         };
@@ -43,7 +58,10 @@ impl ProtoParser {
         if self.tokens.len() == 0 {
             match byte as usize {
                 LCDWRITE_VAL_ID => self.kind = LCDWRITE_VAL_ID,
+LCDCLEAR_VAL_ID => self.kind = LCDCLEAR_VAL_ID,
 LED_1_VAL_ID => self.kind = LED_1_VAL_ID,
+HANDSHAKE_VAL_ID => self.kind = HANDSHAKE_VAL_ID,
+RECIEVED_VAL_ID => self.kind = RECIEVED_VAL_ID,
 
                 _ => self.kind = usize::MAX,
             };
@@ -83,7 +101,16 @@ l2.push(self.tokens[last_index] as char);
 last_index += 1;
 }
 last_index += 1;
-return Some(Value::Lcdwrite(l2,l1));
+return Some(Value::Lcdwrite(l1,l2));
+}},
+LCDCLEAR_VAL_ID => {
+let mut done = false;
+done = self.tokens.len() == LCDCLEAR_VAL_LEN;
+if done {
+let mut last_index = 1;
+let k = (self.tokens[last_index] & 1 << 0) != 0;
+last_index += 1;
+return Some(Value::Lcdclear(k));
 }},
 LED_1_VAL_ID => {
 let mut done = false;
@@ -93,6 +120,24 @@ let mut last_index = 1;
 let state = (self.tokens[last_index] & 1 << 0) != 0;
 last_index += 1;
 return Some(Value::Led_1(state));
+}},
+HANDSHAKE_VAL_ID => {
+let mut done = false;
+done = self.tokens.len() == HANDSHAKE_VAL_LEN;
+if done {
+let mut last_index = 1;
+let side = (self.tokens[last_index] & 1 << 0) != 0;
+last_index += 1;
+return Some(Value::Handshake(side));
+}},
+RECIEVED_VAL_ID => {
+let mut done = false;
+done = self.tokens.len() == RECIEVED_VAL_LEN;
+if done {
+let mut last_index = 1;
+let side = (self.tokens[last_index] & 1 << 0) != 0;
+last_index += 1;
+return Some(Value::Recieved(side));
 }},
 
                 _ => self.kind = usize::MAX,
@@ -111,6 +156,12 @@ return Some(Value::Led_1(state));
     }
 }
 pub const LCDWRITE_VAL_ID: usize = 0;
-pub const LED_1_VAL_ID: usize = 1;
+pub const LCDCLEAR_VAL_ID: usize = 1;
+pub const LCDCLEAR_VAL_LEN: usize = 2;
+pub const LED_1_VAL_ID: usize = 2;
 pub const LED_1_VAL_LEN: usize = 2;
+pub const HANDSHAKE_VAL_ID: usize = 3;
+pub const HANDSHAKE_VAL_LEN: usize = 2;
+pub const RECIEVED_VAL_ID: usize = 4;
+pub const RECIEVED_VAL_LEN: usize = 2;
 
